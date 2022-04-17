@@ -1,0 +1,18 @@
+version: "3.8"
+services:
+  app:
+    build:
+      context: ..
+      dockerfile: .devcontainer/Dockerfile
+    init: true
+    volumes:
+      - porcorn-time:/workspace
+      - vscode-extensions:/root/.vscode-server/extensions
+
+    container_name: porcorn-time-development
+    command: sleep infinity
+
+volumes:
+  porcorn-time:
+  vscode-extensions:
+  vscode-extensions-insiders:

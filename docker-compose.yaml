@@ -1,0 +1,32 @@
+version: '3.8'
+services:
+  porpcorn-time-ui:
+    build: ./popcorn-time-ui
+    container_name: porpcorn-time-ui
+    ports:
+      - 3000:3000
+    stdin_open: true
+
+  popcorn-time-api:
+    container_name: porpcorn-time-api
+    depends_on:
+      - popcorn-time-db
+    build: ./popcorn-time-api
+    ports:
+      - 4001:4001
+
+  popcorn-time-db:
+    container_name: porpcorn-time-db
+    image: postgres:latest
+    restart: unless-stopped
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: popcorn_db
+    volumes:
+      - postgres-data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+volumes:
+  postgres-data:

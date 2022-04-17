@@ -1,0 +1,23 @@
+{
+    "name": "PopcornTime",
+    "dockerComposeFile": "docker-compose.yml",
+    "service": "workspace",
+    "workspaceFolder": "/workspace",
+    "extensions": [
+        "dbaeumer.vscode-eslint",
+        "esbenp.prettier-vscode",
+        "ms-python.python",
+        "ms-python.vscode-pylance"
+    ],
+    "forwardPorts": [
+        80,
+        3000,
+        4001,
+        5432,
+    ],
+    "postCreateCommand": [
+        "bash",
+        ".devcontainer/scripts/environment.sh"
+    ],
+    "remoteUser": "corn"
+}

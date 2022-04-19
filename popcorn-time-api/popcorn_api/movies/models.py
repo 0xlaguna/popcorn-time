@@ -5,7 +5,7 @@ from django.db import models
 
 class Movie(models.Model):
     title = models.CharField(max_length=60)
-    year = models.CharField(max_length=4)
+    year = models.SmallIntegerField(validators=[MaxValueValidator(4)])
     runtime = models.TimeField()
     released = models.DateField(null=True)
     genre = models.TextField()

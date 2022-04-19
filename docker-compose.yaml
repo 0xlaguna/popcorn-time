@@ -12,6 +12,8 @@ services:
     depends_on:
       - popcorn-time-db
     build: ./popcorn-time-api
+    volumes:
+      - static_django_volume:/app/popcorn_api/staticfiles
     ports:
       - 4001:4001
 
@@ -30,3 +32,4 @@ services:
 
 volumes:
   postgres-data:
+  static_django_volume:

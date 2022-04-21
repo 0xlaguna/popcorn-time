@@ -2,14 +2,17 @@ from django.conf import settings
 from django.core.validators import MaxValueValidator
 from django.db import models
 
+from .validators import nonsense_year_validator
+
 
 class Movie(models.Model):
     title = models.CharField(max_length=60)
-    year = models.SmallIntegerField(validators=[MaxValueValidator(4)])
+    year = models.SmallIntegerField(validators=[nonsense_year_validator])
     runtime = models.TimeField()
     released = models.DateField(null=True)
     genre = models.TextField()
     cover = models.TextField(null=True)
+    plot = models.TextField(null=True)
 
     class Meta:
         db_table = "movie"

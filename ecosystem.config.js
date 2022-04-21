@@ -9,10 +9,11 @@ module.exports = {
     },
     {
       name: "popcorn-api",
-      script: "popcorn_api/manage.py",
-      args: "runserver 0.0.0.0:4001",
+      script: "./run.sh",
       cwd: './popcorn-time-api',
-      interpreter: "./.venv/bin/python"
+      env: {
+        PORT: "4001"
+      },
     }
   ],
 };

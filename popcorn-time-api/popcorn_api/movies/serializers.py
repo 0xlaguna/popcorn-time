@@ -14,4 +14,5 @@ class MovieSerializer(serializers.ModelSerializer):
             "released",
             "genre",
             "cover",
+            "plot",
         )

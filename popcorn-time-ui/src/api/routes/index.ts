@@ -1,3 +1,5 @@
+import { apiBaseUrl } from '../../lib/constants';
+
 export const apiRoutes = {
-  getMovies: '/api/Movies',
+  getMovies: `${apiBaseUrl}/api/movies`,
 };

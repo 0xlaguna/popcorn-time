@@ -77,15 +77,15 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ links }) => {
         </Group>
 
         <Group>
-          <Group ml={50} spacing={5} className={classes.links}>
-            {items}
-          </Group>
           <Autocomplete
             className={classes.search}
             placeholder="Search"
             icon={<Search size={16} />}
             data={['The batman', 'Joker']}
           />
+          <Group ml={50} spacing={5} className={classes.links}>
+            {items}
+          </Group>
         </Group>
       </div>
     </Header>

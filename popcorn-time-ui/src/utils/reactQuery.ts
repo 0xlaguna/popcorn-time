@@ -1,5 +1,7 @@
 import { api } from '../lib/api';
 
+import { isNil } from 'ramda';
+
 import {
   useInfiniteQuery,
   useMutation,
@@ -10,7 +12,7 @@ import {
 
 import { QueryFunctionContext } from 'react-query/types/core/types';
 import { AxiosError, AxiosResponse } from 'axios';
-import { GetInfinitePagesInterface } from '../interfaces';
+import { IGetInfinitePages } from '../interfaces';
 
 type QueryKeyT = [string, object | undefined];
 
@@ -19,25 +21,33 @@ export const fetcher = <T>({
   pageParam,
 }: QueryFunctionContext<QueryKeyT>): Promise<T> => {
   const [url, params] = queryKey;
-  return api
-    .get<T>(url, { params: { ...params, pageParam } })
-    .then((res) => res.data);
+  return api.get<T>(url, { params: { ...params, page: pageParam } }).then((res) => res.data);
 };
 
+const getPageParam = (url: string | undefined) => {
+  const targetString = 'page=';
+
+  if (isNil(url)) return false;
+
+  const pIndex = url.indexOf(targetString);
+  const pageNumber = url.substring(pIndex + targetString.length, url.length);
+
+  return Number(pageNumber);
+};
+
+/**
+ *
+ * @param url the url to make the request
+ * @param params an object with parameters
+ * @returns
+ */
 export const useLoadMore = <T>(url: string | null, params?: object) => {
-  const context = useInfiniteQuery<
-    GetInfinitePagesInterface<T>,
-    Error,
-    GetInfinitePagesInterface<T>,
-    QueryKeyT
-  >(
+  const context = useInfiniteQuery<IGetInfinitePages<T>, Error, IGetInfinitePages<T>, QueryKeyT>(
     [url!, params],
-    ({ queryKey, pageParam = 1 }) => fetcher({ queryKey, pageParam, meta: { } }),
+    ({ queryKey, pageParam = 1 }) => fetcher({ queryKey, pageParam, meta: {} }),
     {
-      getPreviousPageParam: (firstPage) => firstPage.previousId ?? false,
-      getNextPageParam: (lastPage) => {
-        return lastPage.nextId ?? false;
-      },
+      getPreviousPageParam: (firstPage) => getPageParam(firstPage.previous),
+      getNextPageParam: (lastPage) => getPageParam(lastPage.next),
     }
   );
 
@@ -52,9 +62,8 @@ export const usePrefetch = <T>(url: string | null, params?: object) => {
       return;
     }
 
-    queryClient.prefetchQuery<T, Error, T, QueryKeyT>(
-      [url!, params],
-      ({ queryKey }) => fetcher({ queryKey, meta: {} })
+    queryClient.prefetchQuery<T, Error, T, QueryKeyT>([url!, params], ({ queryKey }) =>
+      fetcher({ queryKey, meta: {} })
     );
   };
 };
@@ -75,7 +84,6 @@ export const useFetch = <T>(
 
   return context;
 };
-
 
 /**
  *
@@ -132,12 +140,7 @@ export const usePost = <T, S>(
   params?: object,
   updater?: (oldData: T, newData: S) => T
 ) => {
-  return useGenericMutation<T, S>(
-    (data) => api.post<S>(url, data),
-    url,
-    params,
-    updater
-  );
+  return useGenericMutation<T, S>((data) => api.post<S>(url, data), url, params, updater);
 };
 
 export const useUpdate = <T, S>(
@@ -145,10 +148,5 @@ export const useUpdate = <T, S>(
   params?: object,
   updater?: (oldData: T, newData: S) => T
 ) => {
-  return useGenericMutation<T, S>(
-    (data) => api.patch<S>(url, data),
-    url,
-    params,
-    updater
-  );
+  return useGenericMutation<T, S>((data) => api.patch<S>(url, data), url, params, updater);
 };

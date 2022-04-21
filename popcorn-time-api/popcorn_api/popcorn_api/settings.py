@@ -35,10 +35,10 @@ environ.Env.read_env()
 # See https://docs.djangoproject.com/en/4.0/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = env("SECRET_KEY")
+SECRET_KEY = env("API_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = env("DEV")
+DEBUG = env("API_ENV")
 
 ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0"]
 
@@ -110,11 +110,11 @@ WSGI_APPLICATION = "popcorn_api.wsgi.application"
 DATABASES = {
     "default": {
         "ENGINE": "django.db.backends.postgresql",
-        "NAME": env("DATABASE_NAME"),
-        "USER": env("DATABASE_USER"),
-        "PASSWORD": env("DATABASE_PASS"),
-        "HOST": env("DATABSE_HOST"),
-        "PORT": env("DATABSE_PORT"),
+        "NAME": env("API_DATABASE_NAME"),
+        "USER": env("API_DATABASE_USER"),
+        "PASSWORD": env("API_DATABASE_PASS"),
+        "HOST": env("API_DATABASE_HOST"),
+        "PORT": env("API_DATABASE_PORT"),
     }
 }
 

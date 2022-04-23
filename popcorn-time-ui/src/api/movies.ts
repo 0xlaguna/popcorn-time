@@ -1,6 +1,12 @@
 import { useFetch, useLoadMore } from '../utils/reactQuery';
 import { apiRoutes } from './routes';
 
-import { IMovies } from '../interfaces/movies';
+import { IMovie } from '../interfaces/movies';
 
-export const useGetMovieList = () => useLoadMore<IMovies[]>(apiRoutes.getMovies);
+// utils
+import { pathToUrl } from '../utils/router';
+
+export const useGetMovieList = () => useLoadMore<IMovie[]>(apiRoutes.getMovies);
+
+export const useGetMovieDetail = (id: number | null) =>
+  useFetch<IMovie>(id ? pathToUrl(apiRoutes.getMovieDetail, { id }) : null);

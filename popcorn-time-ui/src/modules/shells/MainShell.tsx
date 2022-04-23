@@ -1,14 +1,18 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 
 // Mantine
 import { AppShell, Footer, useMantineTheme } from '@mantine/core';
 
 import HeaderSearch from './Header';
 
-export interface MainShellProps {}
+export type MainShellProps = {};
 
 const MainShell: React.FC<MainShellProps> = ({ children }) => {
   const theme = useMantineTheme();
+
+  useEffect(() => {
+    console.log('rendering shell');
+  });
 
   return (
     <AppShell

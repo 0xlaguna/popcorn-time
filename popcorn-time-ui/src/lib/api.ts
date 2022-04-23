@@ -1,5 +1,5 @@
 import axios from 'axios';
-import { getCookie } from "cookies-next";
+import { getCookie } from 'cookies-next';
 
 export const api = {
   get: <T>(url: string, params?: object) =>

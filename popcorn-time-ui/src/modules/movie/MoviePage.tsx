@@ -4,21 +4,16 @@ import React from 'react';
 import MainShell from '../shells/MainShell';
 
 // Components
-import { Welcome } from '../../common/components/Welcome';
-import MovieList from './MovieList';
+import MovieList from './list/MovieList';
 
-interface MoviePageProps {
-  leftPanel?: React.ReactNode;
-}
-
-export const MoviePage: React.FC<MoviePageProps> = () => {
+export default function MoviePage() {
   return (
     <div>
-      <MainShell>
-        <MovieList />
-      </MainShell>
+      <MovieList />
     </div>
   );
-};
+}
 
-export default MoviePage;
+MoviePage.getLayout = function getLayout(page: React.ReactNode) {
+  return <MainShell>{page}</MainShell>;
+};

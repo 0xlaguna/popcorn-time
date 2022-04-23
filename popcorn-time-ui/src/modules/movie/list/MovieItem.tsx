@@ -55,7 +55,7 @@ export const MovieItem: React.FC<
 > = ({ className, image, link, title, description, rating, ...others }) => {
   const { classes, cx } = useStyles();
   const theme = useMantineTheme();
-  const linkProps = { href: link, target: '_blank', rel: 'noopener noreferrer' };
+  const linkProps = { href: link };
 
   return (
     <Card withBorder radius="md" className={cx(classes.card, className)} {...others}>

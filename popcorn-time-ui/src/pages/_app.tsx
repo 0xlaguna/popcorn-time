@@ -1,4 +1,6 @@
-import { useState } from 'react';
+import { Fragment, useState } from 'react';
+
+import { Page } from '../types/page';
 
 // Next
 import { GetServerSidePropsContext } from 'next';
@@ -25,7 +27,11 @@ Router.events.on('routeChangeStart', () => {
 Router.events.on('routeChangeComplete', () => NProgress.done());
 Router.events.on('routeChangeError', () => NProgress.done());
 
-export default function App(props: AppProps & { colorScheme: ColorScheme }) {
+type Props = AppProps & {
+  Component: Page;
+};
+
+export default function App(props: Props & { colorScheme: ColorScheme }) {
   const { Component, pageProps } = props;
   const [colorScheme, setColorScheme] = useState<ColorScheme>(props.colorScheme);
 
@@ -35,8 +41,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
     setCookies('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
   };
 
+  const getLayout = Component.getLayout ?? ((page) => page);
+  const Layout = Component.layout ?? Fragment;
+
   return (
-    <>
+    <Layout>
       <Head>
         <title>Popcorn time</title>
         <meta name="viewport" content="minimum-scale=1, initial-scale=1, width=device-width" />
@@ -46,13 +55,11 @@ export default function App(props: AppProps & { colorScheme: ColorScheme }) {
       <QueryClientProvider client={popCornQueryClient}>
         <ColorSchemeProvider colorScheme={colorScheme} toggleColorScheme={toggleColorScheme}>
           <MantineProvider theme={{ colorScheme }} withGlobalStyles withNormalizeCSS>
-            <NotificationsProvider>
-              <Component {...pageProps} />
-            </NotificationsProvider>
+            <NotificationsProvider>{getLayout(<Component {...pageProps} />)}</NotificationsProvider>
           </MantineProvider>
         </ColorSchemeProvider>
       </QueryClientProvider>
-    </>
+    </Layout>
   );
 }
 

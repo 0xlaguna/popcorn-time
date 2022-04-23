@@ -10,7 +10,7 @@ import { useScrollIntoView } from '@mantine/hooks';
 import { MovieItem, MovieItemProps } from './MovieItem';
 
 // api
-import { useGetMovieList } from '../../api/movies';
+import { useGetMovieList } from '../../../api/movies';
 
 const useStyles = createStyles((theme) => ({
   MovieGrid: {
@@ -56,7 +56,7 @@ export const MovieList: React.FC = () => {
                 {map((movie) => {
                   const props: MovieItemProps = {
                     image: movie.cover,
-                    link: '#',
+                    link: `/movie/${movie.id}/detail`,
                     title: movie.title,
                     description: movie.plot,
                     rating: '★★★★★★★★★★',

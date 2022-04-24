@@ -1,5 +1,5 @@
 from django.conf import settings
-from django.core.validators import MaxValueValidator
+from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
 
 from .validators import nonsense_year_validator
@@ -21,13 +21,13 @@ class Movie(models.Model):
         return self.title
 
 
-class rating(models.Model):
+class Rating(models.Model):
     user = models.ForeignKey(
         settings.AUTH_USER_MODEL, on_delete=models.CASCADE
     )
     movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
     rating = models.PositiveSmallIntegerField(
-        validators=[MaxValueValidator(10)]
+        validators=[MaxValueValidator(10), MinValueValidator(1)]
     )
     comment = models.TextField(null=True)
 

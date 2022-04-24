@@ -1,40 +1,32 @@
 import React from 'react';
 
-// mantine
-import { createStyles, Text, Avatar, Group } from '@mantine/core';
+import { Space } from '@mantine/core';
 
-const useStyles = createStyles((theme) => ({
-  body: {
-    paddingLeft: 54,
-    paddingTop: theme.spacing.sm,
-  },
-}));
+// components
+import CommentItem from './CommentItem';
+import { useGetMovieRatings } from '../../../api/movies';
 
-interface CommentProps {
-  postedAt: string;
-  body: string;
-  author: {
-    name: string;
-    image: string;
-  };
+export interface CommentsProps {
+  movieId: number;
 }
 
-export const Comment: React.FC<CommentProps> = ({ postedAt, body, author }) => {
-  const { classes } = useStyles();
+const Comments: React.FC<CommentsProps> = ({ movieId }) => {
+  const { data: list, isLoading } = useGetMovieRatings({ movie_id: movieId });
+  console.log({ list, isLoading });
+
   return (
     <div>
-      <Group>
-        <Avatar src={author.image} alt={author.name} radius="xl" />
-        <div>
-          <Text size="sm">{author.name}</Text>
-          <Text size="xs" color="dimmed">
-            {postedAt}
-          </Text>
-        </div>
-      </Group>
-      <Text className={classes.body} size="sm">
-        {body}
-      </Text>
+      <CommentItem
+        postedAt="2022-04-08"
+        body="It was kinda cool, but i didnt like the par where batman kills joker"
+        author="laguna"
+      />
+      <Space h="xl" />
+      <CommentItem postedAt="2022-04-08" body="It was cool!" author="laguna" />
+      <Space h="xl" />
+      <CommentItem postedAt="2022-04-08" body="It was cool!" author="laguna" />
     </div>
   );
 };
+
+export default Comments;

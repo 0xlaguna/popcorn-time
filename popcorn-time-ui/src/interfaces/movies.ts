@@ -8,3 +8,19 @@ export interface IMovie {
   cover: string;
   plot: string;
 }
+
+export interface IRating {
+  id: number;
+  user: number;
+  movie: number;
+  rating: number;
+  comment: string;
+}
+
+// 	{
+// 	"id": 1,
+// 	"user": 1,
+// 	"movie": 1,
+// 	"rating": 7,
+// 	"comment": "It was awesome!"
+// },

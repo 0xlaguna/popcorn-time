@@ -1,0 +1,33 @@
+version: '3'
+services:
+  nginx:
+    restart: on-failure
+    image: nginx:stable
+    volumes:
+      - ./popcorn-time-api/nginx/nginx.dev.conf:/etc/nginx/conf.d/default.conf
+      - static_volume:/app/popcorn_api/staticfiles
+    ports:
+      - 80:80
+    depends_on:
+      - popcorn-time-api
+    networks:
+      - django-network
+
+  popcorn-time-api:
+    image: 115426337269.dkr.ecr.us-east-1.amazonaws.com/popbackend
+    depends_on:
+      - popcorn-time-db
+    volumes:
+      - static_volume:/app/popcorn_api/staticfiles
+      - media_volume:/app/popcorn_api/mediafiles
+    ports:
+      - 4001:4001
+    networks:
+      - django-network
+
+networks:
+  django-network:
+
+volumes:
+  static_volume:
+  media_volume:

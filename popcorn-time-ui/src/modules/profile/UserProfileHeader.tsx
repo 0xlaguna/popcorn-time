@@ -1,10 +1,14 @@
 import { forwardRef, useState } from 'react';
-import { ChevronRight, Heart, Logout } from 'tabler-icons-react';
+import { ChevronRight, Heart, Logout, Login } from 'tabler-icons-react';
 
 // mantine
-import { Group, Avatar, Text, Menu, UnstyledButton, useMantineTheme } from '@mantine/core';
+import { Group, Avatar, Text, Menu, UnstyledButton, useMantineTheme, Button } from '@mantine/core';
 
 import WatchList from './Watchlist';
+
+import { isNil } from 'ramda';
+
+import { useSessionStore } from '../../lib/stores';
 
 interface UserButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   name: string;
@@ -52,23 +56,33 @@ const UserProfileHeader: React.FC = () => {
   const theme = useMantineTheme();
   const [openWatchlist, setOpenWatchlist] = useState(false);
 
+  const jwt = useSessionStore((state) => state.jwt);
+
   const triggerWatchList = () => setOpenWatchlist(!openWatchlist);
 
   return (
     <>
-      <Group position="center">
-        <Menu withArrow placement="center" control={<UserButton name="laguna" email="" />}>
-          <Menu.Item
-            icon={<Heart size={14} color={theme.colors.red[6]} />}
-            onClick={() => triggerWatchList()}
-          >
-            Watchlist
-          </Menu.Item>
+      {isNil(jwt) ? (
+        <Button>
+          <Avatar src={null} radius="xl" color="indigo">
+            <Login />
+          </Avatar>
+        </Button>
+      ) : (
+        <Group position="center">
+          <Menu withArrow placement="center" control={<UserButton name="laguna" email="" />}>
+            <Menu.Item
+              icon={<Heart size={14} color={theme.colors.red[6]} />}
+              onClick={() => triggerWatchList()}
+            >
+              Watchlist
+            </Menu.Item>
 
-          <Menu.Label>Settings</Menu.Label>
-          <Menu.Item icon={<Logout size={14} />}>Logout</Menu.Item>
-        </Menu>
-      </Group>
+            <Menu.Label>Settings</Menu.Label>
+            <Menu.Item icon={<Logout size={14} />}>Logout</Menu.Item>
+          </Menu>
+        </Group>
+      )}
       <WatchList visible={openWatchlist} close={() => triggerWatchList()} />
     </>
   );

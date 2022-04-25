@@ -9,6 +9,8 @@ import { map } from 'ramda';
 import CommentItem from './CommentItem';
 import Skeleton from '../../../common/components/Skeleton';
 
+import MovieRating from './MovieRating';
+
 // api
 import { useGetMovieRatings } from '../../../api/movies';
 
@@ -55,12 +57,14 @@ const Comments: React.FC<CommentsProps> = ({ movieId }) => {
             ),
             list!.pages
           )}
+          <Space h="xl" />
+          <MovieRating movieId={movieId} />
         </div>
       )}
       {hasNextPage && (
         <div ref={targetRef}>
-          <Button style={{}} loading={isLoading} onClick={() => fetchNextPage()}>
-            Load more
+          <Button style={{ marginTop: '20px' }} loading={isLoading} onClick={() => fetchNextPage()}>
+            Load more comments
           </Button>
         </div>
       )}

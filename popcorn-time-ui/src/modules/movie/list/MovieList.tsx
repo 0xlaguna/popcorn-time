@@ -12,6 +12,7 @@ import { MovieItem, MovieItemProps } from './MovieItem';
 
 // api
 import { useGetMovieList } from '../../../api/movies';
+import { AddMovie } from './AddMovie/AddMovie';
 
 const useStyles = createStyles((theme) => ({
   MovieGrid: {
@@ -28,7 +29,7 @@ export const MovieList: React.FC = () => {
   const { classes } = useStyles();
   const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({ offset: 60 });
 
-  const { data: list, isLoading, fetchNextPage, hasNextPage } = useGetMovieList();
+  const { data: list, isLoading, fetchNextPage, hasNextPage, refetch } = useGetMovieList();
 
   useEffect(() => {
     hasNextPage && scrollIntoView({ alignment: 'center' });
@@ -40,10 +41,11 @@ export const MovieList: React.FC = () => {
 
   return (
     <Container>
+      <AddMovie updateData={refetch} />
       {isLoading ? (
         <Skeleton />
       ) : (
-        <div className={classes.MovieGrid}>
+        <div className={classes.MovieGrid} style={{ marginTop: '10px' }}>
           {map(
             (moviePage) => (
               <React.Fragment key={moviePage.next}>

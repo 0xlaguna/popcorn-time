@@ -16,3 +16,11 @@ export interface IRating {
   username: string;
   posted_at: Date;
 }
+
+export interface ICreateMovie {
+  cover: string;
+  genre: string;
+  year: string;
+  title: string;
+  plot: string;
+}

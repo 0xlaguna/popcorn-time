@@ -4,6 +4,8 @@ import React from 'react';
 import { createStyles, Header, Autocomplete, Group, Burger } from '@mantine/core';
 import { useBooleanToggle } from '@mantine/hooks';
 
+import UserProfileHeader from '../profile/UserProfileHeader';
+
 // assets
 import { Search } from 'tabler-icons-react';
 import PopcornLogo from '../../common/assets/PopcornLogo';
@@ -57,17 +59,6 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ links }) => {
   const [opened, toggleOpened] = useBooleanToggle(false);
   const { classes } = useStyles();
 
-  const items = links.map((link) => (
-    <a
-      key={link.label}
-      href={link.link}
-      className={classes.link}
-      onClick={(event) => event.preventDefault()}
-    >
-      {link.label}
-    </a>
-  ));
-
   return (
     <Header height={56} className={classes.header} mb={120}>
       <div className={classes.inner}>
@@ -84,7 +75,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ links }) => {
             data={['The batman', 'Joker']}
           />
           <Group ml={50} spacing={5} className={classes.links}>
-            {items}
+            <UserProfileHeader />
           </Group>
         </Group>
       </div>

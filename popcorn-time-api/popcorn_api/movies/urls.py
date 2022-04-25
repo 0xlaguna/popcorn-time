@@ -10,4 +10,5 @@ urlpatterns = [
         name="get_movie",
     ),
     path("ratings", views.ListMovieRatingsAPIView.as_view(), name="get_ratings"),
+    path("addmovie", views.CreateMovieAPIView.as_view(), name="add_movies"),
 ]

@@ -1,4 +1,4 @@
-import { useFetch, useLoadMore } from '../utils/reactQuery';
+import { useFetch, useLoadMore, usePost } from '../utils/reactQuery';
 import { apiRoutes } from './routes';
 
 import { IMovie, IRating } from '../interfaces/movies';
@@ -13,3 +13,5 @@ export const useGetMovieDetail = (id: number | null) =>
 
 export const useGetMovieRatings = (params: object = {}) =>
   useLoadMore<IRating[]>(apiRoutes.getMovieRatings, params);
+
+export const useMutateMovie = () => usePost(apiRoutes.addMovie);

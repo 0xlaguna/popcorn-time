@@ -29,3 +29,8 @@ class ListMovieRatingsAPIView(ListAPIView):
     def get_queryset(self):
         movie_id = self.request.query_params.get('movie_id')
         return Rating.objects.filter(movie=movie_id).all()
+
+
+class CreateMovieAPIView(CreateAPIView):
+    serializer_class = MovieSerializer
+    queryset = Movie.objects.all()

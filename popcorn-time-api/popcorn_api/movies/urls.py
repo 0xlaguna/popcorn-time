@@ -9,5 +9,5 @@ urlpatterns = [
         views.RetrieveMovieAPIView.as_view(),
         name="get_movie",
     ),
-    path("movies/ratings/", views.ListMovieRatingsAPIView.as_view(), name="get_ratings"),
+    path("ratings", views.ListMovieRatingsAPIView.as_view(), name="get_ratings"),
 ]

@@ -4,14 +4,15 @@ from .models import Movie
 from .models import Rating
 
 class RatingSerializer(serializers.ModelSerializer):
+    username = serializers.CharField(source='user.username')
     class Meta:
         model = Rating
         fields = (
             "id",
-            "user",
-            "movie",
             "rating",
-            "comment"
+            "comment",
+            "username",
+            "posted_at"
         )
 
 class MovieSerializer(serializers.ModelSerializer):

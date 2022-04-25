@@ -28,7 +28,7 @@
     "@modulz/radix-icons": "^4.0.0",
     "axios": "^0.26.1",
     "cookies-next": "^2.0.4",
-    "dayjs": "^1.11.0",
+    "dayjs": "^1.11.1",
     "next": "12.1.4",
     "nprogress": "^0.2.0",
     "path-to-regexp": "^6.2.0",

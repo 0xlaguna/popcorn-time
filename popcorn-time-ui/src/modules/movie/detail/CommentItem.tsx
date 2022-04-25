@@ -5,6 +5,10 @@ import { createStyles, Text, Avatar, Group, Paper, Badge } from '@mantine/core';
 
 import { Star } from 'tabler-icons-react';
 
+// lib
+import { FormatDate } from '../../../lib/dayjs';
+import { map } from 'ramda';
+
 const useStyles = createStyles((theme) => ({
   Comment: {
     padding: `${theme.spacing.lg}px ${theme.spacing.xl}px`,
@@ -26,13 +30,16 @@ const useStyles = createStyles((theme) => ({
 }));
 
 interface CommentProps {
-  postedAt: string;
+  postedAt: Date;
   body: string;
   author: string;
+  rate: number;
 }
 
-const Comment: React.FC<CommentProps> = ({ postedAt, body, author }) => {
+const Comment: React.FC<CommentProps> = ({ postedAt, body, author, rate }) => {
   const { classes } = useStyles();
+
+  const startIterator = Array.from({ length: rate }, (_, i) => i + 1);
 
   return (
     <Paper withBorder radius="md" className={classes.Comment}>
@@ -41,9 +48,9 @@ const Comment: React.FC<CommentProps> = ({ postedAt, body, author }) => {
           <Group>
             <Avatar src={null} alt="no image here" color="indigo" />
             <div>
-              <Text size="sm">{'laguna'}</Text>
+              <Text size="sm">{author}</Text>
               <Text size="xs" color="dimmed">
-                {postedAt}
+                {FormatDate(postedAt)}
               </Text>
             </div>
           </Group>
@@ -57,9 +64,12 @@ const Comment: React.FC<CommentProps> = ({ postedAt, body, author }) => {
             variant="gradient"
             gradient={{ from: 'yellow', to: 'red' }}
           >
-            <Star size={15} />
-            <Star size={15} />
-            <Star size={15} />
+            {map(
+              (it) => (
+                <Star size={15} key={it} />
+              ),
+              startIterator
+            )}
           </Badge>
         </Group>
       </div>

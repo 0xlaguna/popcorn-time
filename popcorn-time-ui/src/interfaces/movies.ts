@@ -11,16 +11,8 @@ export interface IMovie {
 
 export interface IRating {
   id: number;
-  user: number;
-  movie: number;
   rating: number;
   comment: string;
+  username: string;
+  posted_at: Date;
 }
-
-// 	{
-// 	"id": 1,
-// 	"user": 1,
-// 	"movie": 1,
-// 	"rating": 7,
-// 	"comment": "It was awesome!"
-// },

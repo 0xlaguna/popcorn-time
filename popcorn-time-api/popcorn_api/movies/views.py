@@ -1,6 +1,6 @@
 from django_filters import rest_framework as filters
 from rest_framework import permissions
-from rest_framework.generics import ListAPIView, RetrieveAPIView
+from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 
 from .filters import MovieFilter
 from .models import Movie, Rating

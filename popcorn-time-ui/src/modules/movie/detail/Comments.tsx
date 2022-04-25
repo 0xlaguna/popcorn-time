@@ -1,9 +1,15 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-import { Space } from '@mantine/core';
+import { Space, Button } from '@mantine/core';
+import { useScrollIntoView } from '@mantine/hooks';
+
+import { map } from 'ramda';
 
 // components
 import CommentItem from './CommentItem';
+import Skeleton from '../../../common/components/Skeleton';
+
+// api
 import { useGetMovieRatings } from '../../../api/movies';
 
 export interface CommentsProps {
@@ -11,20 +17,53 @@ export interface CommentsProps {
 }
 
 const Comments: React.FC<CommentsProps> = ({ movieId }) => {
-  const { data: list, isLoading } = useGetMovieRatings({ movie_id: movieId });
-  console.log({ list, isLoading });
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({ offset: 60 });
+  const {
+    data: list,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetMovieRatings({ movie_id: movieId });
+
+  useEffect(() => {
+    hasNextPage && scrollIntoView({ alignment: 'center' });
+  });
 
   return (
     <div>
-      <CommentItem
-        postedAt="2022-04-08"
-        body="It was kinda cool, but i didnt like the par where batman kills joker"
-        author="laguna"
-      />
-      <Space h="xl" />
-      <CommentItem postedAt="2022-04-08" body="It was cool!" author="laguna" />
-      <Space h="xl" />
-      <CommentItem postedAt="2022-04-08" body="It was cool!" author="laguna" />
+      {isLoading ? (
+        <Skeleton />
+      ) : (
+        <div>
+          {map(
+            (ratingPage) => (
+              <React.Fragment key={ratingPage.next}>
+                {map((rating) => {
+                  return (
+                    <React.Fragment key={rating.id}>
+                      <Space h="xl" />
+                      <CommentItem
+                        postedAt={rating.posted_at}
+                        body={rating.comment}
+                        author={rating.username}
+                        rate={rating.rating}
+                      />
+                    </React.Fragment>
+                  );
+                }, ratingPage.results)}
+              </React.Fragment>
+            ),
+            list!.pages
+          )}
+        </div>
+      )}
+      {hasNextPage && (
+        <div ref={targetRef}>
+          <Button style={{}} loading={isLoading} onClick={() => fetchNextPage()}>
+            Load more
+          </Button>
+        </div>
+      )}
     </div>
   );
 };

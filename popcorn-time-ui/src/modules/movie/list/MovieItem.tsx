@@ -47,12 +47,11 @@ export interface MovieItemProps {
   link: string;
   title: string;
   description: string;
-  rating: string;
 }
 
 export const MovieItem: React.FC<
   MovieItemProps & Omit<React.ComponentPropsWithoutRef<'div'>, keyof MovieItemProps>
-> = ({ className, image, link, title, description, rating, ...others }) => {
+> = ({ className, image, link, title, description, ...others }) => {
   const { classes, cx } = useStyles();
   const theme = useMantineTheme();
   const linkProps = { href: link };
@@ -65,9 +64,9 @@ export const MovieItem: React.FC<
         </a>
       </Card.Section>
 
-      <Badge className={classes.rating} variant="gradient" gradient={{ from: 'yellow', to: 'red' }}>
+      {/* <Badge className={classes.rating} variant="gradient" gradient={{ from: 'yellow', to: 'red' }}>
         {rating}
-      </Badge>
+      </Badge> */}
 
       <Text className={classes.title} weight={500} component="a" {...linkProps}>
         {title}

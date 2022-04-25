@@ -1,6 +1,7 @@
 from django.conf import settings
 from django.core.validators import MaxValueValidator, MinValueValidator
 from django.db import models
+from django.utils.timezone import now
 
 from .validators import nonsense_year_validator
 
@@ -30,6 +31,7 @@ class Rating(models.Model):
         validators=[MaxValueValidator(10), MinValueValidator(1)]
     )
     comment = models.TextField(null=True)
+    posted_at = models.DateTimeField(default=now, editable=False, null=True)
 
     class Meta:
         db_table = "rating"

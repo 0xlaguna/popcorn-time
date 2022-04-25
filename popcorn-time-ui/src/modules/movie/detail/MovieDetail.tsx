@@ -10,7 +10,10 @@ import {
   Text,
   useMantineTheme,
   Group,
+  Space,
 } from '@mantine/core';
+
+import Comments from './Comments';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -61,41 +64,46 @@ export interface MovieDetailProps {
   };
 }
 
-export const MovieDetail: React.FC<
+const MovieDetail: React.FC<
   MovieDetailProps & Omit<CardProps<'div'>, keyof MovieDetailProps | 'children'>
-> = ({ title, description, image, action, style, className, ...others }) => {
+> = ({ movieId, title, description, image, action, style, className, ...others }) => {
   const { classes, cx } = useStyles();
   const theme = useMantineTheme();
 
   return (
-    <Card
-      radius="md"
-      style={{ backgroundImage: `url(${image})`, ...style }}
-      className={cx(classes.card, className)}
-      {...others}
-    >
-      <Overlay
-        gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[4]} 100%)`}
-        opacity={0.55}
-        zIndex={0}
-      />
+    <>
+      <Card
+        radius="md"
+        style={{ backgroundImage: `url(${image})`, ...style }}
+        className={cx(classes.card, className)}
+        {...others}
+      >
+        <Overlay
+          gradient={`linear-gradient(105deg, ${theme.black} 20%, #312f2f 50%, ${theme.colors.gray[4]} 100%)`}
+          opacity={0.55}
+          zIndex={0}
+        />
 
-      <div className={classes.content}>
-        <Text size="lg" weight={700} className={classes.title}>
-          {title}
-        </Text>
+        <div className={classes.content}>
+          <Text size="lg" weight={700} className={classes.title}>
+            {title}
+          </Text>
 
-        <Text size="sm" className={classes.description}>
-          {description}
-        </Text>
+          <Text size="sm" className={classes.description}>
+            {description}
+          </Text>
 
-        <Group position="apart" className={classes.footer}>
-          <Button variant="white" color="dark" component="a" size="xs" href={action.link}>
-            {action.label}
-          </Button>
-        </Group>
+          <Group position="apart" className={classes.footer}>
+            <Button variant="white" color="dark" component="a" size="xs" href={action.link}>
+              {action.label}
+            </Button>
+          </Group>
+        </div>
+      </Card>
+      <div>
+        <Comments movieId={movieId} />
       </div>
-    </Card>
+    </>
   );
 };
 

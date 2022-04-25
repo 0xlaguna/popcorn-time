@@ -3,10 +3,11 @@ import React, { useEffect } from 'react';
 import { map } from 'ramda';
 
 // mantine
-import { Grid, Skeleton, Container, createStyles, Button } from '@mantine/core';
+import { Container, createStyles, Button } from '@mantine/core';
 import { useScrollIntoView } from '@mantine/hooks';
 // components
 
+import Skeleton from '../../../common/components/Skeleton';
 import { MovieItem, MovieItemProps } from './MovieItem';
 
 // api
@@ -22,8 +23,6 @@ const useStyles = createStyles((theme) => ({
     marginTop: '0.8rem',
   },
 }));
-
-const ChildSkeleton = <Skeleton height={140} radius="md" animate={true} />;
 
 export const MovieList: React.FC = () => {
   const { classes } = useStyles();
@@ -42,12 +41,7 @@ export const MovieList: React.FC = () => {
   return (
     <Container>
       {isLoading ? (
-        <Grid>
-          <Grid.Col xs={3}>{ChildSkeleton}</Grid.Col>
-          <Grid.Col xs={3}>{ChildSkeleton}</Grid.Col>
-          <Grid.Col xs={3}>{ChildSkeleton}</Grid.Col>
-          <Grid.Col xs={3}>{ChildSkeleton}</Grid.Col>
-        </Grid>
+        <Skeleton />
       ) : (
         <div className={classes.MovieGrid}>
           {map(
@@ -59,7 +53,6 @@ export const MovieList: React.FC = () => {
                     link: `/movie/${movie.id}/detail`,
                     title: movie.title,
                     description: movie.plot,
-                    rating: '★★★★★★★★★★',
                   };
 
                   return <MovieItem key={movie.id} {...props} />;

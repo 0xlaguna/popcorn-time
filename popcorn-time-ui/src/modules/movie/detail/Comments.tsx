@@ -1,40 +1,71 @@
-import React from 'react';
+import React, { useEffect } from 'react';
 
-// mantine
-import { createStyles, Text, Avatar, Group } from '@mantine/core';
+import { Space, Button } from '@mantine/core';
+import { useScrollIntoView } from '@mantine/hooks';
 
-const useStyles = createStyles((theme) => ({
-  body: {
-    paddingLeft: 54,
-    paddingTop: theme.spacing.sm,
-  },
-}));
+import { map } from 'ramda';
 
-interface CommentProps {
-  postedAt: string;
-  body: string;
-  author: {
-    name: string;
-    image: string;
-  };
+// components
+import CommentItem from './CommentItem';
+import Skeleton from '../../../common/components/Skeleton';
+
+// api
+import { useGetMovieRatings } from '../../../api/movies';
+
+export interface CommentsProps {
+  movieId: number;
 }
 
-export const Comment: React.FC<CommentProps> = ({ postedAt, body, author }) => {
-  const { classes } = useStyles();
+const Comments: React.FC<CommentsProps> = ({ movieId }) => {
+  const { scrollIntoView, targetRef } = useScrollIntoView<HTMLDivElement>({ offset: 60 });
+  const {
+    data: list,
+    isLoading,
+    fetchNextPage,
+    hasNextPage,
+  } = useGetMovieRatings({ movie_id: movieId });
+
+  useEffect(() => {
+    hasNextPage && scrollIntoView({ alignment: 'center' });
+  });
+
   return (
     <div>
-      <Group>
-        <Avatar src={author.image} alt={author.name} radius="xl" />
+      {isLoading ? (
+        <Skeleton />
+      ) : (
         <div>
-          <Text size="sm">{author.name}</Text>
-          <Text size="xs" color="dimmed">
-            {postedAt}
-          </Text>
+          {map(
+            (ratingPage) => (
+              <React.Fragment key={ratingPage.next}>
+                {map((rating) => {
+                  return (
+                    <React.Fragment key={rating.id}>
+                      <Space h="xl" />
+                      <CommentItem
+                        postedAt={rating.posted_at}
+                        body={rating.comment}
+                        author={rating.username}
+                        rate={rating.rating}
+                      />
+                    </React.Fragment>
+                  );
+                }, ratingPage.results)}
+              </React.Fragment>
+            ),
+            list!.pages
+          )}
         </div>
-      </Group>
-      <Text className={classes.body} size="sm">
-        {body}
-      </Text>
+      )}
+      {hasNextPage && (
+        <div ref={targetRef}>
+          <Button style={{}} loading={isLoading} onClick={() => fetchNextPage()}>
+            Load more
+          </Button>
+        </div>
+      )}
     </div>
   );
 };
+
+export default Comments;

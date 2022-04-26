@@ -1,14 +1,17 @@
 import { forwardRef, useState } from 'react';
+import Router from 'next/router';
 import { ChevronRight, Heart, Logout, Login } from 'tabler-icons-react';
 
 // mantine
 import { Group, Avatar, Text, Menu, UnstyledButton, useMantineTheme, Button } from '@mantine/core';
 
-import WatchList from './Watchlist';
-
+// helpers
 import { isNil } from 'ramda';
 
-import { useSessionStore } from '../../lib/stores';
+import WatchList from './WatchlistDrawer';
+import LoginModal from './LoginModal';
+
+import { useSessionStore } from '../../lib/Stores';
 
 interface UserButtonProps extends React.ComponentPropsWithoutRef<'button'> {
   name: string;
@@ -55,22 +58,25 @@ const UserButton = forwardRef<HTMLButtonElement, UserButtonProps>(
 const UserProfileHeader: React.FC = () => {
   const theme = useMantineTheme();
   const [openWatchlist, setOpenWatchlist] = useState(false);
+  const [openLogin, setOpenLogin] = useState(false);
 
   const jwt = useSessionStore((state) => state.jwt);
+
+  const logOut = useSessionStore((state) => state.logOut);
 
   const triggerWatchList = () => setOpenWatchlist(!openWatchlist);
 
   return (
     <>
       {isNil(jwt) ? (
-        <Button>
+        <Button onClick={() => setOpenLogin(!openLogin)}>
           <Avatar src={null} radius="xl" color="indigo">
             <Login />
           </Avatar>
         </Button>
       ) : (
         <Group position="center">
-          <Menu withArrow placement="center" control={<UserButton name="laguna" email="" />}>
+          <Menu withArrow placement="center" control={<UserButton name="L" email="" />}>
             <Menu.Item
               icon={<Heart size={14} color={theme.colors.red[6]} />}
               onClick={() => triggerWatchList()}
@@ -79,11 +85,22 @@ const UserProfileHeader: React.FC = () => {
             </Menu.Item>
 
             <Menu.Label>Settings</Menu.Label>
-            <Menu.Item icon={<Logout size={14} />}>Logout</Menu.Item>
+            <Menu.Item
+              icon={<Logout size={14} />}
+              onClick={() => {
+                Router.push({
+                  pathname: '/',
+                });
+                logOut();
+              }}
+            >
+              Logout
+            </Menu.Item>
           </Menu>
         </Group>
       )}
       <WatchList visible={openWatchlist} close={() => triggerWatchList()} />
+      <LoginModal visible={openLogin} onClose={() => setOpenLogin(!openLogin)} />
     </>
   );
 };

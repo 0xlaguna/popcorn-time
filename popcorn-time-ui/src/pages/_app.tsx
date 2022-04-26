@@ -20,6 +20,7 @@ import popCornQueryClient from '../lib/QueryClient';
 // nprogress
 import NProgress from 'nprogress';
 import 'nprogress/nprogress.css';
+import { hydrateSession } from '../lib/Stores';
 
 Router.events.on('routeChangeStart', () => {
   NProgress.start();
@@ -40,6 +41,8 @@ export default function App(props: Props & { colorScheme: ColorScheme }) {
     setColorScheme(nextColorScheme);
     setCookies('mantine-color-scheme', nextColorScheme, { maxAge: 60 * 60 * 24 * 30 });
   };
+
+  hydrateSession();
 
   const getLayout = Component.getLayout ?? ((page) => page);
   const Layout = Component.layout ?? Fragment;
@@ -64,5 +67,5 @@ export default function App(props: Props & { colorScheme: ColorScheme }) {
 }
 
 App.getInitialProps = ({ ctx }: { ctx: GetServerSidePropsContext }) => ({
-  colorScheme: getCookie('mantine-color-scheme', ctx) || 'light',
+  colorScheme: getCookie('mantine-color-scheme', ctx) || 'dark',
 });

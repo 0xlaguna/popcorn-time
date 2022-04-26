@@ -1,3 +1,5 @@
+import { getCookie } from 'cookies-next';
+
 import { useFetch, useLoadMore, usePost } from '../utils/reactQuery';
 import { apiRoutes } from './routes';
 
@@ -5,6 +7,7 @@ import { IMovie, IRating } from '../interfaces/movies';
 
 // utils
 import { pathToUrl } from '../utils/router';
+import { getHeaders } from './routes/headers';
 
 export const useGetMovieList = () => useLoadMore<IMovie[]>(apiRoutes.getMovies);
 
@@ -14,4 +17,4 @@ export const useGetMovieDetail = (id: number | null) =>
 export const useGetMovieRatings = (params: object = {}) =>
   useLoadMore<IRating[]>(apiRoutes.getMovieRatings, params);
 
-export const useMutateMovie = () => usePost(apiRoutes.addMovie);
+export const useMutateMovie = () => usePost(apiRoutes.addMovie, getHeaders());

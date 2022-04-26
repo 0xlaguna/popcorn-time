@@ -9,6 +9,7 @@ import UserProfileHeader from '../profile/UserProfileHeader';
 // assets
 import { Search } from 'tabler-icons-react';
 import PopcornLogo from '../../common/assets/PopcornLogo';
+import { ColorSchemeToggle } from '../../ui/utils/ColorSchemeToggle';
 
 const useStyles = createStyles((theme) => ({
   header: {
@@ -76,6 +77,7 @@ const HeaderSearch: React.FC<HeaderSearchProps> = ({ links }) => {
           />
           <Group ml={50} spacing={5} className={classes.links}>
             <UserProfileHeader />
+            <ColorSchemeToggle />
           </Group>
         </Group>
       </div>

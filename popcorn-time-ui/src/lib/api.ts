@@ -2,29 +2,29 @@ import axios from 'axios';
 import { getCookie } from 'cookies-next';
 
 export const api = {
-  get: <T>(url: string, params?: object) =>
+  get: <T>(url: string, headers: object, params?: object) =>
     axios.get<T>(url, {
       headers: {
-        token: getCookie('token') || '',
+        ...headers,
       },
       ...params,
     }),
   post: <T>(url: string, data: any) =>
     axios.post<T>(url, data, {
       headers: {
-        token: getCookie('token') || '',
+        Authorization: `Bearer ${getCookie('pop-token')}` || '',
       },
     }),
   patch: <T>(url: string, data: any) =>
     axios.patch<T>(url, data, {
       headers: {
-        token: getCookie('token') || '',
+        Authorization: `Bearer ${getCookie('pop-token')}` || '',
       },
     }),
   delete: <T>(url: string) =>
     axios.delete<T>(url, {
       headers: {
-        token: getCookie('token') || '',
+        Authorization: `Bearer ${getCookie('pop-token')}` || '',
       },
     }),
 };

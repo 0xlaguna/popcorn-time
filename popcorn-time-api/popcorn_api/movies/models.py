@@ -35,3 +35,14 @@ class Rating(models.Model):
 
     class Meta:
         db_table = "rating"
+
+
+class Watchlist(models.Model):
+    user = models.ForeignKey(
+        settings.AUTH_USER_MODEL, on_delete=models.CASCADE
+    )
+    movie = models.ForeignKey(Movie, on_delete=models.CASCADE)
+    created_at = models.DateTimeField(default=now, editable=False, null=True)
+
+    class Meta:
+        db_table = "watchlist"

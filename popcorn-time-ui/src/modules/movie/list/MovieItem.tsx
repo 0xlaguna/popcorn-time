@@ -13,6 +13,11 @@ import {
   useMantineTheme,
   createStyles,
 } from '@mantine/core';
+import { showNotification } from '@mantine/notifications';
+
+import { useSessionStore } from '../../../lib/Stores';
+import { isNil } from 'ramda';
+import { useMutateWatchlist } from '../../../api/watchlist';
 
 const useStyles = createStyles((theme) => ({
   card: {
@@ -43,6 +48,7 @@ const useStyles = createStyles((theme) => ({
 }));
 
 export interface MovieItemProps {
+  id: number;
   image: string;
   link: string;
   title: string;
@@ -51,10 +57,31 @@ export interface MovieItemProps {
 
 export const MovieItem: React.FC<
   MovieItemProps & Omit<React.ComponentPropsWithoutRef<'div'>, keyof MovieItemProps>
-> = ({ className, image, link, title, description, ...others }) => {
+> = ({ className, id, image, link, title, description, ...others }) => {
   const { classes, cx } = useStyles();
   const theme = useMantineTheme();
   const linkProps = { href: link };
+
+  const jwt = useSessionStore((state) => state.jwt);
+
+  const { mutate } = useMutateWatchlist();
+
+  const addToWatchlist = (values: object) => {
+    mutate(values, {
+      onSuccess: () => {
+        showNotification({
+          title: 'Success',
+          message: 'Added to your watchlist',
+        });
+      },
+      onError: () => {
+        showNotification({
+          title: 'Error',
+          message: 'There was an error, check network',
+        });
+      },
+    });
+  };
 
   return (
     <Card withBorder radius="md" className={cx(classes.card, className)} {...others}>
@@ -63,10 +90,6 @@ export const MovieItem: React.FC<
           <Image src={image} height={180} />
         </a>
       </Card.Section>
-
-      {/* <Badge className={classes.rating} variant="gradient" gradient={{ from: 'yellow', to: 'red' }}>
-        {rating}
-      </Badge> */}
 
       <Text className={classes.title} weight={500} component="a" {...linkProps}>
         {title}
@@ -77,24 +100,17 @@ export const MovieItem: React.FC<
       </Text>
 
       <Group position="apart" className={classes.footer}>
-        {/* <Center>
-          <Avatar src={author.image} size={24} radius="xl" mr="xs" />
-          <Text size="sm" inline>
-            {author.name}
-          </Text>
-        </Center> */}
-
-        <Group spacing={8} mr={0}>
-          <ActionIcon className={classes.action} style={{ color: theme.colors.red[6] }}>
-            <Heart size={16} />
-          </ActionIcon>
-          <ActionIcon className={classes.action} style={{ color: theme.colors.yellow[7] }}>
-            <Bookmark size={16} />
-          </ActionIcon>
-          <ActionIcon className={classes.action}>
-            <Share size={16} />
-          </ActionIcon>
-        </Group>
+        {!isNil(jwt) && (
+          <Group spacing={8} mr={0}>
+            <ActionIcon
+              onClick={() => addToWatchlist({ movie: id })}
+              className={classes.action}
+              style={{ color: theme.colors.red[6] }}
+            >
+              <Heart size={16} />
+            </ActionIcon>
+          </Group>
+        )}
       </Group>
     </Card>
   );

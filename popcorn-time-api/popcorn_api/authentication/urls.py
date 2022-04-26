@@ -1,4 +1,4 @@
-from authentication.views import RegisterView
+from authentication.views import RegisterView, UserListView
 from django.urls import path
 
 # isort: off

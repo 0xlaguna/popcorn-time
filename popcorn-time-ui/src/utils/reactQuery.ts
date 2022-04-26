@@ -16,12 +16,14 @@ import { IGetInfinitePages } from '../interfaces';
 
 type QueryKeyT = [string, object | undefined];
 
-export const fetcher = <T>({
-  queryKey,
-  pageParam,
-}: QueryFunctionContext<QueryKeyT>): Promise<T> => {
+export const fetcher = <T>(
+  { queryKey, pageParam }: QueryFunctionContext<QueryKeyT>,
+  headers: object
+): Promise<T> => {
   const [url, params] = queryKey;
-  return api.get<T>(url, { params: { ...params, page: pageParam } }).then((res) => res.data);
+  return api
+    .get<T>(url, headers, { params: { ...params, page: pageParam } })
+    .then((res) => res.data);
 };
 
 const getPageParam = (url: string | undefined) => {
@@ -41,10 +43,10 @@ const getPageParam = (url: string | undefined) => {
  * @param params an object with parameters
  * @returns
  */
-export const useLoadMore = <T>(url: string | null, params?: object) => {
+export const useLoadMore = <T>(url: string | null, headers: object = {}, params?: object) => {
   const context = useInfiniteQuery<IGetInfinitePages<T>, Error, IGetInfinitePages<T>, QueryKeyT>(
     [url!, params],
-    ({ queryKey, pageParam = 1 }) => fetcher({ queryKey, pageParam, meta: {} }),
+    ({ queryKey, pageParam = 1 }) => fetcher({ queryKey, pageParam, meta: {} }, headers),
     {
       getPreviousPageParam: (firstPage) => getPageParam(firstPage.previous),
       getNextPageParam: (lastPage) => getPageParam(lastPage.next),
@@ -54,7 +56,7 @@ export const useLoadMore = <T>(url: string | null, params?: object) => {
   return context;
 };
 
-export const usePrefetch = <T>(url: string | null, params?: object) => {
+export const usePrefetch = <T>(url: string | null, headers: object, params?: object) => {
   const queryClient = useQueryClient();
 
   return () => {
@@ -63,19 +65,20 @@ export const usePrefetch = <T>(url: string | null, params?: object) => {
     }
 
     queryClient.prefetchQuery<T, Error, T, QueryKeyT>([url!, params], ({ queryKey }) =>
-      fetcher({ queryKey, meta: {} })
+      fetcher({ queryKey, meta: {} }, headers)
     );
   };
 };
 
 export const useFetch = <T>(
   url: string | null,
+  headers: object = {},
   params?: object,
   config?: UseQueryOptions<T, Error, T, QueryKeyT>
 ) => {
   const context = useQuery<T, Error, T, QueryKeyT>(
     [url!, params],
-    ({ queryKey }) => fetcher({ queryKey, meta: {} }),
+    ({ queryKey }) => fetcher({ queryKey, meta: {} }, headers),
     {
       enabled: !!url,
       ...config,

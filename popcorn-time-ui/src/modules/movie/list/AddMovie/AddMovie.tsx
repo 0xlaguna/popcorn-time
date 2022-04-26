@@ -1,13 +1,18 @@
 import { useState } from 'react';
 
+// helpers
+import { isNil } from 'ramda';
+
 // mantine
-import { Modal, Button, Group, TextInput, Select, Textarea } from '@mantine/core';
+import { Modal, Button, Group, TextInput, Textarea } from '@mantine/core';
 import { showNotification } from '@mantine/notifications';
 import { useForm } from '@mantine/hooks';
 
-import { genreOptions } from './options';
 import { ICreateMovie } from '../../../../interfaces/movies';
 import { useMutateMovie } from '../../../../api/movies';
+
+// stores
+import { useSessionStore } from '../../../../lib/Stores';
 
 export interface AddMovieProps {
   updateData: () => void;
@@ -16,6 +21,8 @@ export interface AddMovieProps {
 export const AddMovie = ({ updateData }: AddMovieProps) => {
   const [opened, setOpened] = useState(false);
   const { mutate } = useMutateMovie();
+
+  const jwt = useSessionStore((state) => state.jwt);
 
   const form = useForm({
     initialValues: {
@@ -99,9 +106,11 @@ export const AddMovie = ({ updateData }: AddMovieProps) => {
         </form>
       </Modal>
 
-      <Group position="center">
-        <Button onClick={() => setOpened(true)}>Add new Movie!</Button>
-      </Group>
+      {!isNil(jwt) && (
+        <Group position="center">
+          <Button onClick={() => setOpened(true)}>Add new Movie!</Button>
+        </Group>
+      )}
     </>
   );
 };

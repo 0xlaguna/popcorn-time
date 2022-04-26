@@ -51,6 +51,7 @@ export const MovieList: React.FC = () => {
               <React.Fragment key={moviePage.next}>
                 {map((movie) => {
                   const props: MovieItemProps = {
+                    id: movie.id,
                     image: movie.cover,
                     link: `/movie/${movie.id}/detail`,
                     title: movie.title,
@@ -61,7 +62,7 @@ export const MovieList: React.FC = () => {
                 }, moviePage.results)}
               </React.Fragment>
             ),
-            list!.pages
+            list?.pages || []
           )}
         </div>
       )}

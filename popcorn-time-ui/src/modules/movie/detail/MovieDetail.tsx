@@ -14,6 +14,7 @@ import {
 } from '@mantine/core';
 
 import Comments from './Comments';
+import { useSessionStore } from '../../../lib/Stores';
 
 const useStyles = createStyles((theme) => ({
   card: {

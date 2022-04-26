@@ -32,11 +32,11 @@ environ.Env.read_env()
 SECRET_KEY = env("API_SECRET_KEY")
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = False
 
-ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "djangopop.herokuapp.com"]
+ALLOWED_HOSTS = ["localhost", "127.0.0.1", "0.0.0.0", "djangopop.herokuapp.com", "popcornui.herokuapp.com"]
 
-CSRF_TRUSTED_ORIGINS = ['https://djangopop.herokuapp.com']
+CSRF_TRUSTED_ORIGINS = ['https://djangopop.herokuapp.com', "https://popcornui.herokuapp.com/"]
 
 REST_FRAMEWORK = {
     "DEFAULT_AUTHENTICATION_CLASSES": (

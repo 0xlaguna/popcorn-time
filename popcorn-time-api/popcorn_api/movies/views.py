@@ -3,9 +3,16 @@ from rest_framework import permissions
 from rest_framework.generics import ListAPIView, RetrieveAPIView, CreateAPIView
 
 from .filters import MovieFilter
-from .models import Movie, Rating
+from .models import Movie, Rating, Watchlist
 from .pagination import CustomPagination
-from .serializers import MovieSerializer, RatingSerializer
+
+# isort: off
+from .serializers import (
+    MovieSerializer, 
+    RatingSerializer, 
+    WatchlistSerializer, 
+    CreateWatchlistSerializer
+)
 
 
 class ListMovieAPIView(ListAPIView):
@@ -33,4 +40,23 @@ class ListMovieRatingsAPIView(ListAPIView):
 
 class CreateMovieAPIView(CreateAPIView):
     serializer_class = MovieSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
     queryset = Movie.objects.all()
+
+
+# WATCHLIST
+
+class ListUserWatchlistAPIView(ListAPIView):
+    serializer_class = WatchlistSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+    pagination_class = CustomPagination
+
+    def get_queryset(self):
+        return Watchlist.objects.filter(user=self.request.user).all()
+
+class CreateWatchlistAPIView(CreateAPIView):
+    serializer_class = CreateWatchlistSerializer
+    permission_classes = [permissions.IsAuthenticatedOrReadOnly]
+
+    def perform_create(self, serializer):
+        serializer.save(user=self.request.user)
